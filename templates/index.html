@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Система мониторинга зубьев ковша</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="2" width="14" height="14" rx="3" fill="#7ac143"/>
+        <rect x="20" y="2" width="14" height="14" rx="3" fill="#7ac143" opacity="0.6"/>
+        <rect x="2" y="20" width="14" height="14" rx="3" fill="#7ac143" opacity="0.6"/>
+        <rect x="20" y="20" width="14" height="14" rx="3" fill="#7ac143"/>
+      </svg>
+      <span class="logo-text">УАП</span>
+    </div>
+    <div class="header-time" id="clock"></div>
+    <div class="header-icons">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+    </div>
+  </header>
+  <!-- MAIN -->
+  <div class="main">
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+      <!-- Степень износа зубьев -->
+      <div class="metric-card">
+        <div class="metric-title">Степень износа зубьев</div>
+        <div class="metric-subtitle">Зубья по порядку</div>
+        <div class="metric-cols">
+          <div class="metric-col"><div class="metric-label">Зуб №1</div><div class="metric-value" id="tooth-1">—</div></div>
+          <div class="metric-col"><div class="metric-label">Зуб №2</div><div class="metric-value" id="tooth-2">—</div></div>
+          <div class="metric-col"><div class="metric-label">Зуб №3</div><div class="metric-value" id="tooth-3">—</div></div>
+          <div class="metric-col"><div class="metric-label">Зуб №4</div><div class="metric-value" id="tooth-4">—</div></div>
+          <div class="metric-col"><div class="metric-label">Зуб №5</div><div class="metric-value" id="tooth-5">—</div></div>
+          <div class="metric-col"><div class="metric-label">Зуб №6</div><div class="metric-value" id="tooth-6">—</div></div>
+        </div>
+      </div>
+      <!-- Процентное соотношение -->
+      <div class="metric-card">
+        <div class="metric-title">Процентное соотношение</div>
+        <div class="metric-cols">
+          <div class="metric-col"><div class="metric-label">&lt; 100 мм</div><div class="metric-value" id="ratio-small">Н/Д</div></div>
+          <div class="metric-col"><div class="metric-label">Норма</div><div class="metric-value" id="ratio-norm">Н/Д</div></div>
+          <div class="metric-col"><div class="metric-label">&gt; 1150 мм</div><div class="metric-value" id="ratio-large">Н/Д</div></div>
+        </div>
+      </div>
+      <!-- Количество ковшей для оптимальной загрузки -->
+      <div class="metric-card">
+        <div class="metric-title">Количество ковшей для оптимальной загрузки</div>
+        <div class="metric-subtitle" id="bucket-name">Загрузка...</div>
+        <div class="metric-cols">
+          <div class="metric-col"><div class="metric-label">Текущих</div><div class="metric-value" id="current-buckets">—</div></div>
+          <div class="metric-col"><div class="metric-label">Максимум</div><div class="metric-value" id="max-buckets">—</div></div>
+          <div class="metric-col"><div class="metric-label">Объём м³</div><div class="metric-value" id="bucket-volume">—</div></div>
+        </div>
+        <div class="bucket-progress-container">
+          <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
+          </div>
+          <div class="progress-text"><span id="progress-percent">0</span>%</div>
+        </div>
+      </div>
+      <!-- Статистика -->
+      <div class="metric-card">
+        <div class="metric-title">Статистика</div>
+        <div class="metric-cols">
+          <div class="metric-col"><div class="metric-label">Количество ковшов за смену</div><div class="metric-value" id="total-buckets">321</div></div>
+          <div class="metric-col"><div class="metric-label">Общий объем выемки</div><div class="metric-value" id="total-volume">460</div></div>
+          <div class="metric-col"><div class="metric-label">Количество загруженных самосвалов </div><div class="metric-value" id="total-trucks">34</div></div>
+          <div class="metric-col"><div class="metric-label">Время простоя за смену</div><div class="metric-value" id="total-trucks">34</div></div>
+        </div>
+      </div>
+    </div>
+    <!-- RIGHT PANEL (Видео) -->
+    <div class="right-panel">
+      <div class="video-container">
+        <div class="scanline"></div>
+        <div class="live-indicator">
+          <div class="live-dot"></div>
+          LIVE
+        </div>
+
+        <!-- Правильный способ для MJPEG стрима -->
+        <img id="video-feed" 
+             class="video-feed" 
+             src="{{ url_for('video_feed') }}" 
+             alt="Live Video Feed"
+             onerror="showPlaceholder()">
+        <div class="frame-id" id="frame-id">Frame ID: —</div>
+      </div>
+    </div>
+  </div>
+  <!-- BOTTOM BAR -->
+  <div class="bottom-bar">
+    <div class="bottom-left">
+      <button class="btn-action active">ЗУБЬЯ</button>
+      <button class="btn-action active">ОТЧЕТ</button>
+      <button class="btn-action active">СООБЩЕНИЯ</button>
+      <button class="btn-action active">НЕГАБАРИТ</button>
+    </div>
+    <div class="bottom-right">
+      <div class="bucket-item"><div class="bucket-num">1</div><div class="bucket-icon"><div class="bucket-top"></div><div class="bucket-body"></div></div><div class="bucket-label">-</div></div>
+      <div class="bucket-item"><div class="bucket-num">2</div><div class="bucket-icon"><div class="bucket-top"></div><div class="bucket-body"></div></div><div class="bucket-label">-</div></div>
+      <div class="bucket-item"><div class="bucket-num">3</div><div class="bucket-icon"><div class="bucket-top"></div><div class="bucket-body"></div></div><div class="bucket-label">-</div></div>
+      <div class="bucket-item"><div class="bucket-num">4</div><div class="bucket-icon"><div class="bucket-top"></div><div class="bucket-body"></div></div><div class="bucket-label">-</div></div>
+      <div class="bucket-item"><div class="bucket-num">5</div><div class="bucket-icon"><div class="bucket-top"></div><div class="bucket-body"></div></div><div class="bucket-label">-</div></div>
+    </div>
+  </div>
+
+  <!-- Скрипты -->
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/bucket_data.js') }}"></script>
+</body>
+</html>

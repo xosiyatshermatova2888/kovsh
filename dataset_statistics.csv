@@ -1,0 +1,5 @@
+﻿bolim,rasmlar,bucket_digging,bucket_empty,bucket_loaded,dumping,tooth,truck_empty,truck_loading,boshqa
+train,744,289,260,100,93,2151,10,229,0
+val,246,93,90,37,21,767,11,56,0
+test,50,18,5,19,7,197,12,13,1
+JAMI,1040,400,355,156,121,3115,33,298,1

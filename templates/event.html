@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Журнал событий — Эксковатора</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1c2330;
+      --border: #2a3441;
+      --accent: #7ac143;
+      --accent2: #00b4d8;
+      --danger: #e63946;
+      --warning: #f0883e;
+      --success: #3fb950;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --purple: #9b72cf;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── HEADER ── */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 56px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+    }
+
+    .logo-text {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--text);
+    }
+
+    .header-time {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+    }
+
+    .header-icons {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .header-icons svg {
+      width: 20px;
+      height: 20px;
+      color: var(--text-muted);
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+    }
+
+    /* ── CONTROLS ── */
+    .controls {
+      display: flex;
+      gap: 12px;
+      padding: 16px 24px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .filter-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    .filter-btn {
+      padding: 8px 12px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 12px;
+      transition: all 0.15s;
+    }
+
+    .filter-btn:hover {
+      background: var(--border);
+      color: var(--text);
+    }
+
+    .filter-btn.active {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 200px;
+      padding: 8px 12px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+    }
+
+    .search-box::placeholder {
+      color: var(--text-muted);
+    }
+
+    /* ── TABLE ── */
+    .table-wrapper {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .table-header {
+      display: grid;
+      grid-template-columns: 140px 160px 1fr 100px 120px;
+      gap: 0;
+      padding: 0 24px;
+      background: var(--surface2);
+      border-bottom: 2px solid var(--border);
+      height: 40px;
+      align-items: center;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .table-header-cell {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .table-body {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .table-row {
+      display: grid;
+      grid-template-columns: 140px 160px 1fr 100px 120px;
+      gap: 0;
+      padding: 0 24px;
+      align-items: center;
+      height: 48px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+      cursor: pointer;
+    }
+
+    .table-row:hover {
+      background: var(--surface2);
+    }
+
+    .cell-date {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text);
+      letter-spacing: 0.5px;
+    }
+
+    .cell-time {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--accent2);
+      letter-spacing: 0.5px;
+    }
+
+    .cell-event {
+      font-size: 13px;
+      color: var(--text);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .event-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .event-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .event-dot.error { background: var(--danger); }
+    .event-dot.warning { background: var(--warning); }
+    .event-dot.info { background: var(--accent2); }
+    .event-dot.success { background: var(--success); }
+
+    .cell-level {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .level-ERROR { color: var(--danger); }
+    .level-WARNING { color: var(--warning); }
+    .level-INFO { color: var(--accent2); }
+    .level-SUCCESS { color: var(--success); }
+
+    .cell-source {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    /* ── EXPANDABLE ROW ── */
+    .row-details {
+      display: none;
+      grid-column: 1 / -1;
+      background: var(--surface2);
+      padding: 16px 24px;
+      font-size: 12px;
+      color: var(--text);
+      border-left: 3px solid var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .table-row.expanded + .row-details {
+      display: block;
+    }
+
+    .detail-line {
+      line-height: 1.6;
+      margin: 4px 0;
+      word-break: break-word;
+    }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      display: flex;
+      gap: 32px;
+      padding: 12px 24px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .stat-value {
+      font-size: 16px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ── SCROLLBAR ── */
+    .table-body::-webkit-scrollbar { width: 6px; }
+    .table-body::-webkit-scrollbar-track { background: transparent; }
+    .table-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    .table-body::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .table-row { animation: fadeIn 0.3s ease-out; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="2" width="14" height="14" rx="3" fill="#7ac143"/>
+        <rect x="20" y="2" width="14" height="14" rx="3" fill="#7ac143" opacity="0.6"/>
+        <rect x="2" y="20" width="14" height="14" rx="3" fill="#7ac143" opacity="0.6"/>
+        <rect x="20" y="20" width="14" height="14" rx="3" fill="#7ac143"/>
+      </svg>
+      <span class="logo-text">ЖУРНАЛ</span>
+    </div>
+
+    <div class="header-time" id="clock">16:17:18 | 12 ДЕКАБРЯ 2024 г.</div>
+
+    <div class="header-icons">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+    </div>
+  </header>
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <div class="filter-group">
+      <span class="filter-label">Уровень</span>
+      <button class="filter-btn active" data-filter="all">ВСЕ</button>
+      <button class="filter-btn" data-filter="ERROR">ОШИБКИ</button>
+      <button class="filter-btn" data-filter="WARNING">ПРЕДУПРЕЖДЕНИЯ</button>
+      <button class="filter-btn" data-filter="INFO">ИНФО</button>
+      <button class="filter-btn" data-filter="SUCCESS">УСПЕХ</button>
+    </div>
+    <input type="text" class="search-box" id="searchBox" placeholder="Поиск по событию, источнику...">
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-wrapper">
+    <div class="table-header">
+      <div class="table-header-cell">Дата</div>
+      <div class="table-header-cell">Время</div>
+      <div class="table-header-cell">Событие</div>
+      <div class="table-header-cell">Уровень</div>
+      <div class="table-header-cell">Источник</div>
+    </div>
+
+    <div class="table-body" id="tableBody">
+      <!-- Rows will be generated by JS -->
+    </div>
+  </div>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <span class="stat-label">Всего событий</span>
+      <span class="stat-value" id="totalEvents">0</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Ошибок</span>
+      <span class="stat-value" style="color: var(--danger);" id="errorCount">0</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Предупреждений</span>
+      <span class="stat-value" style="color: var(--warning);" id="warningCount">0</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Последнее событие</span>
+      <span class="stat-value" style="color: var(--accent2);" id="lastEvent">-</span>
+    </div>
+  </div>
+
+  <script>
+    // Sample event log data (в реальном приложении загружается с бэка)
+    const events = [
+      { date: '12.12.2024', time: '16:47:32', event: 'Запуск системы видеонаблюдения', level: 'SUCCESS', source: 'SYSTEM', details: 'UUID: a1f2e3d4-c5b6-47f8-9a0b-1c2d3e4f5a6b\nВерсия ПО: 3.2.1\nПолоса пропускания: 1.2 Gbps' },
+      { date: '12.12.2024', time: '16:43:15', event: 'Калибровка камеры завершена', level: 'SUCCESS', source: 'CAM_0', details: 'Точность: 98.7%\nОшибка фокуса: 0.3 мм\nТемпература: 42°C' },
+      { date: '12.12.2024', time: '16:38:47', event: 'Обнаружено смещение фокуса на 2.1 мм', level: 'WARNING', source: 'CAM_0', details: 'Рекомендуется переустановка объектива\nПовторная попытка автокалибровки...' },
+      { date: '12.12.2024', time: '16:35:22', event: 'Ошибка 0x403: Потеря синхронизации с GPS', level: 'ERROR', source: 'GPS_RX', details: 'Тип ошибки: TIMEOUT\nКод: 0x403\nПопыток переподключения: 3/5' },
+      { date: '12.12.2024', time: '16:32:10', event: 'Обновление прошивки FPGA успешно', level: 'SUCCESS', source: 'FPGA', details: 'Версия: 2.4.8 → 2.4.9\nВремя загрузки: 23 сек\nЧек-сумма: OK' },
+      { date: '12.12.2024', time: '16:28:55', event: 'Предупреждение: Дроп кадров 0.12%', level: 'WARNING', source: 'GPU_0', details: 'Буфер переполнения в 12 местах\nЧастота кадров: 120 FPS\nНагрузка GPU: 87%' },
+      { date: '12.12.2024', time: '16:25:03', event: 'Инициализация нейросети для анализа гранулометрии', level: 'INFO', source: 'AI_ENGINE', details: 'Модель: YOLOv8-nano\nПараметры: 3.2M\nПредсказания/сек: 1420' },
+      { date: '12.12.2024', time: '16:20:18', event: 'Давление в цилиндре питания упало на 8%', level: 'WARNING', source: 'HYDRAULICS', details: 'Текущее давление: 185 bar\nНома: 200 bar\nТемпература масла: 58°C' },
+      { date: '12.12.2024', time: '16:15:42', event: 'Обнаружена аномалия в последовательности кадров', level: 'ERROR', source: 'FRAME_SYNC', details: 'Кадр #47823 не соответствует временной шкале\nРазница: +127 мс\nКоррекция...' },
+      { date: '12.12.2024', time: '16:12:31', event: 'Сканирование для выявления перегретых зон завершено', level: 'INFO', source: 'THERMAL', details: 'Макс температура: 78°C (куб.м 4D)\nПрава точек выше 70°C: 3\nСтатус: НОМИНАЛЬНЫЙ' },
+      { date: '12.12.2024', time: '16:08:19', event: 'Память GPU очищена. Освобождено 2.4 ГБ', level: 'SUCCESS', source: 'GPU_0', details: 'Было занято: 7.6 ГБ\nЕсть доступно: 10 ГБ\nУтечка памяти: нет' },
+      { date: '12.12.2024', time: '16:04:05', event: 'Получено новое задание от ОТК-2', level: 'INFO', source: 'COMM_SRV', details: 'ID контракта: QA-2024-12-4521\nТип анализа: ГРАНУЛОМЕТРИЯ\nУникальный код: YT8K-P2Q3' },
+    ];
+
+    let filteredEvents = [...events];
+    let currentFilter = 'all';
+
+    // Generate table rows
+    function renderTable() {
+      const tableBody = document.getElementById('tableBody');
+      tableBody.innerHTML = '';
+
+      filteredEvents.forEach((evt, idx) => {
+        const eventColor = evt.level === 'ERROR' ? 'error' : 
+                          evt.level === 'WARNING' ? 'warning' : 
+                          evt.level === 'SUCCESS' ? 'success' : 'info';
+
+        const row = document.createElement('div');
+        row.className = 'table-row';
+        row.onclick = () => row.classList.toggle('expanded');
+
+        row.innerHTML = `
+          <div class="cell-date">${evt.date}</div>
+          <div class="cell-time">${evt.time}</div>
+          <div class="cell-event">
+            <div class="event-indicator">
+              <div class="event-dot ${eventColor}"></div>
+              <span>${evt.event}</span>
+            </div>
+          </div>
+          <div class="cell-level level-${evt.level}">${evt.level}</div>
+          <div class="cell-source">${evt.source}</div>
+        `;
+
+        tableBody.appendChild(row);
+
+        const details = document.createElement('div');
+        details.className = 'row-details';
+        details.innerHTML = evt.details.split('\n').map(line => 
+          `<div class="detail-line">${line}</div>`
+        ).join('');
+
+        tableBody.appendChild(details);
+      });
+
+      updateStats();
+    }
+
+    // Update statistics
+    function updateStats() {
+      const total = filteredEvents.length;
+      const errors = filteredEvents.filter(e => e.level === 'ERROR').length;
+      const warnings = filteredEvents.filter(e => e.level === 'WARNING').length;
+      const lastTime = filteredEvents[0]?.time || '-';
+
+      document.getElementById('totalEvents').textContent = total;
+      document.getElementById('errorCount').textContent = errors;
+      document.getElementById('warningCount').textContent = warnings;
+      document.getElementById('lastEvent').textContent = lastTime;
+    }
+
+    // Filter by level
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => {
+          b.classList.remove('active');
+        });
+        btn.classList.add('active');
+
+        currentFilter = btn.dataset.filter;
+        applyFilters();
+      });
+    });
+
+    // Search
+    document.getElementById('searchBox').addEventListener('input', applyFilters);
+
+    function applyFilters() {
+      const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+
+      filteredEvents = events.filter(evt => {
+        const levelMatch = currentFilter === 'all' || evt.level === currentFilter;
+        const searchMatch = !searchTerm || 
+                           evt.event.toLowerCase().includes(searchTerm) ||
+                           evt.source.toLowerCase().includes(searchTerm) ||
+                           evt.details.toLowerCase().includes(searchTerm);
+        return levelMatch && searchMatch;
+      });
+
+      renderTable();
+    }
+
+    // Clock update
+    function updateClock() {
+      const now = new Date();
+      const months = ['ЯНВАРЯ','ФЕВРАЛЯ','МАРТА','АПРЕЛЯ','МАЯ','ИЮНЯ',
+                      'ИЮЛЯ','АВГУСТА','СЕНТЯБРЯ','ОКТЯБРЯ','НОЯБРЯ','ДЕКАБРЯ'];
+      const h = String(now.getHours()).padStart(2,'0');
+      const m = String(now.getMinutes()).padStart(2,'0');
+      const s = String(now.getSeconds()).padStart(2,'0');
+      const d = now.getDate();
+      const mon = months[now.getMonth()];
+      const y = now.getFullYear();
+      document.getElementById('clock').textContent =
+        `${h}:${m}:${s} | ${d} ${mon} ${y} г.`;
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // Initial render
+    renderTable();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,397 @@
+:root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1c2330;
+      --border: #2a3441;
+      --accent: #7ac143;
+      --accent2: #00b4d8;
+      --danger: #e63946;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --purple: #9b72cf;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── HEADER ── */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 56px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+    }
+
+    .logo-text {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--text);
+    }
+
+    .header-time {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+    }
+
+    .header-icons {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .header-icons svg {
+      width: 20px;
+      height: 20px;
+      color: var(--text-muted);
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .main {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 0;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ── LEFT PANEL ── */
+    .left-panel {
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+    }
+
+    .metric-card {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .metric-card:last-child {
+      border-bottom: none;
+    }
+
+    .metric-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    .metric-cols {
+      display: flex;
+      gap: 0;
+      margin-bottom: 12px;
+    }
+
+    .metric-col {
+      flex: 1;
+    }
+
+    .metric-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .metric-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 1px;
+    }
+
+    .metric-value.na {
+      color: var(--text-muted);
+    }
+
+    /* ── ПРОГРЕСС БАР ДЛЯ КОВШЕЙ ── */
+    .bucket-progress-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .progress-bar {
+      flex: 1;
+      height: 6px;
+      background: var(--surface2);
+      border-radius: 3px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent) 0%, rgba(122, 193, 67, 0.8) 100%);
+      border-radius: 3px;
+      transition: width 0.3s ease;
+      box-shadow: 0 0 8px rgba(122, 193, 67, 0.4);
+    }
+
+    .progress-text {
+      font-size: 12px;
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      min-width: 32px;
+      text-align: right;
+    }
+
+    /* ── BOTTOM BAR ── */
+    .bottom-bar {
+      display: flex;
+      align-items: stretch;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      flex-shrink: 0;
+      height: 100px;
+    }
+
+    .bottom-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-right: 1px solid var(--border);
+      width: 380px;
+      flex-shrink: 0;
+    }
+
+    .btn-action {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      transition: all 0.15s;
+      min-width: 72px;
+    }
+
+    .btn-action.secondary {
+      background: var(--surface2);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-action.active {
+      background: var(--accent);
+      color: #000;
+    }
+
+    .btn-action:hover {
+      opacity: 0.85;
+      transform: translateY(-1px);
+    }
+
+    .btn-action svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    /* ── RIGHT PANEL ── */
+    .right-panel {
+      display: flex;
+      flex-direction: column;
+      background: #0a0d12;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .video-container {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .video-feed {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .video-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+      color: var(--text-muted);
+      background: #0a0d12;
+    }
+
+    .video-placeholder svg {
+      width: 48px;
+      height: 48px;
+      opacity: 0.3;
+    }
+
+    .video-placeholder span {
+      font-size: 14px;
+      letter-spacing: 2px;
+      opacity: 0.4;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .frame-id {
+      position: absolute;
+      bottom: 10px;
+      left: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: rgba(255,255,255,0.45);
+      letter-spacing: 0.5px;
+      pointer-events: none;
+    }
+
+    /* ── BOTTOM RIGHT (buckets) ── */
+    .bottom-right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      padding: 12px 32px;
+    }
+
+    .bucket-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .bucket-num {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .bucket-icon {
+      position: relative;
+      width: 44px;
+      height: 52px;
+    }
+
+    .bucket-body {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 46px;
+      clip-path: polygon(8% 0%, 92% 0%, 100% 100%, 0% 100%);
+      background: linear-gradient(180deg, #3a7d0a 0%, #2d5e08 100%);
+    }
+
+    .bucket-top {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 44px;
+      height: 8px;
+      background: linear-gradient(180deg, #c8f547 0%, #7ac143 100%);
+      border-radius: 2px 2px 0 0;
+    }
+
+    .bucket-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 1px;
+    }
+
+    /* ── SCAN LINE ANIMATION ── */
+    @keyframes scanline {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(100vh); }
+    }
+
+    .scanline {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(122, 193, 67, 0.15), transparent);
+      animation: scanline 4s linear infinite;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .live-indicator {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+      letter-spacing: 2px;
+      z-index: 5;
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse-dot 1.2s ease-in-out infinite;
+    }
+
+    /* scrollbar */
+    .left-panel::-webkit-scrollbar { width: 4px; }
+    .left-panel::-webkit-scrollbar-track { background: transparent; }
+    .left-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }

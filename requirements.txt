@@ -1,0 +1,15 @@
+# YOLO (Ultralytics) — ekskavator kovshi tishlari va avtosamosval kuzovini aniqlash
+
+ultralytics>=8.3.0
+torch>=2.6.0
+torchvision>=0.21.0
+opencv-python>=4.9
+numpy>=1.24
+pandas>=2.0
+matplotlib>=3.7
+seaborn>=0.13
+openpyxl>=3.1
+PyYAML>=6.0
+
+# GPU uchun (CUDA 12.4) torch ni shu yo'l bilan o'rnating:
+#   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124

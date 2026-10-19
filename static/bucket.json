@@ -1,0 +1,9 @@
+{
+  "bucket": {
+    "name": "ЭКГ 69",
+    "weight_t": 200,
+    "volume_m3": 13,
+    "max_allowed_buckets": 10,
+    "current_buckets": 6
+  }
+}

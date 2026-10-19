@@ -1,0 +1,16 @@
+path: C:/Users/XOSIYAT/Desktop/kovsh/data
+
+train: train/images
+val: val/images
+test: test/images
+
+names:
+  0: kovsh_motion
+  1: bucket_digging
+  2: bucket_empty
+  3: bucket_loaded
+  4: dumping
+  5: tooth
+  6: truck_empty
+  7: truck_loading
+  8: tuck
